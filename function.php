@@ -19,7 +19,7 @@ function short($url)
 		$result = mysqli_query($GLOBALS['con'], 'SELECT MAX(id) FROM link');
 		while ($row = mysqli_fetch_assoc($result))
 			$id = $row['MAX(id)'];
-		return '{"status": "success","shortlink": "' . $GLOBALS['siteurl'] . $id . '"}';
+		return '{"status": "success","shortlink": "' . $GLOBALS['siteurl'] . encode($id) . '"}';
 	}
 	else
 	{
@@ -29,6 +29,7 @@ function short($url)
 
 function urlfromid($id)
 {
+	$id = decode($id);
 	$id = mysqli_real_escape_string($GLOBALS['con'], $id);
 	$result = mysqli_query($GLOBALS['con'], 'SELECT url FROM link WHERE id="' . $id . '"');
 	if ($result)
@@ -48,6 +49,32 @@ function urlfromid($id)
 	{
 		return '{"status": "fail","error": "' . mysqli_error($GLOBALS['con']) . '"}';
 	}
+}
+
+function encode($id)
+{
+	$id_str = (string)$id;
+	$offset = rand(0, 9);
+	$encoded = chr(79 + $offset);
+	for ($i = 0, $len = strlen($id_str); $i < $len; ++$i)
+	{
+		$encoded.= chr(65 + $id_str[$i] + $offset);
+	}
+
+	return strtolower($encoded);
+}
+
+function decode($encoded)
+{
+	$encoded = strtoupper($encoded);
+	$offset = ord($encoded[0]) - 79;
+	$encoded = substr($encoded, 1);
+	for ($i = 0, $len = strlen($encoded); $i < $len; ++$i)
+	{
+		$encoded[$i] = ord($encoded[$i]) - $offset - 65;
+	}
+
+	return (int)$encoded;
 }
 
 ?>

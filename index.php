@@ -18,8 +18,8 @@ include 'function.php';
     <!-- Bootstrap core CSS -->
     <link href="<?php echo $siteurl; ?>css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="<?php echo $siteurl; ?>acss/narrow-jumbotron.css" rel="stylesheet">
+    <!-- Animate CSS -->
+    <link href="<?php echo $siteurl; ?>css/animate.css" rel="stylesheet">
 
   </head>
 
@@ -45,7 +45,7 @@ if (isset($_POST['url']))
 {
 	$result = short($_POST['url']);
 	$result = json_decode($result, true);
-	if ($result['status'] == "success") echo $result['shortlink'];
+	if ($result['status'] == "success") echo "<h3 class='animated flipInY'>".$result['shortlink']."</h3>";
 }
 else
 {
